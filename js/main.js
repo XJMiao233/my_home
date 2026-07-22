@@ -422,7 +422,7 @@ document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
         document.title = '(╥﹏╥) 我走了...';
     } else {
-        document.title = '✨ 二次元个人主页 ✨';
+        document.title = '✨ XJMiao's Home  ✨';
     }
 });
 
@@ -469,7 +469,7 @@ function triggerEasterEgg() {
         }, i * 50);
     }
     
-    showNotification('🎉 发现隐藏彩蛋！你真是个二次元高手！', 'success');
+    showNotification('🎉 发现隐藏彩蛋！你好厉害！！', 'success');
 }
 
 // ===== 添加 sparkle 动画 =====
