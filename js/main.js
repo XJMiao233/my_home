@@ -534,4 +534,4 @@ window.addEventListener('scroll', throttle(() => {
 window.scrollToSection = scrollToSection;
 window.showNotification = showNotification;
 
-console.log('🌸 二次元世界已加载完成！欢迎来到 Miku 的世界～ ✨');
+console.log('🌸 二次元世界已加载完成！欢迎来到 XJMiao's Home  ✨');
