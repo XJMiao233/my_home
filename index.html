@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ XJMiao's Home ✨</title>
+    <script>
+        (function() {
+            const storageKey = 'theme-mode';
+            const storedMode = localStorage.getItem(storageKey);
+            const mode = storedMode && ['auto', 'light', 'dark'].includes(storedMode) ? storedMode : 'auto';
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const resolvedTheme = mode === 'auto' ? (prefersDark ? 'dark' : 'light') : mode;
+            document.documentElement.setAttribute('data-theme', resolvedTheme);
+            document.documentElement.setAttribute('data-theme-mode', mode);
+        })();
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/avatar.jpg" type="image/jpeg">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- 背景粒子动画 -->
+    <div class="background-animation">
+        <div class="floating-particles"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fa-solid fa-house"></i>
+                <span class="logo-text">XJMiao's Home</span>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="#home" class="nav-link">HOME</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换主题">
+                    <i class="fas fa-sun theme-icon-light"></i>
+                    <i class="fas fa-moon theme-icon-dark"></i>
+                    <span class="theme-toggle-text">自动</span>
+                </button>
+                <div class="hamburger" id="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主页区域 -->
+    <section id="home" class="hero-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="avatar-container">
+                    <div class="avatar-frame">
+                        <img src="images/avatar.jpg" alt="Avatar" class="avatar-image">
+                        <div class="avatar-glow"></div>
+                    </div>
+                </div>
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="greeting">こんにちは！</span>
+                        <span class="name-text">我是 <span class="highlight-name">XJMiao~</span></span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        <span class="typing-text">一个臭打音游的 ✨</span>
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="scrollToSection('about')">
+                            <i class="fas fa-user"></i>
+                            了解更多
+                        </button>
+                        <button class="btn btn-outline" onclick="scrollToSection('contact')">
+                            <i class="fas fa-envelope"></i>
+                            联系我
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="floating-elements">
+                <div class="floating-heart">💖</div>
+                <div class="floating-star">✨</div>
+                <div class="floating-cloud">☁️</div>
+                <div class="floating-moon">🌙</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于我区域 -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-heart"></i>
+                    关于我
+                </h2>
+                <p class="section-subtitle">了解一下这个小小的二次元世界</p>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <div class="about-card quote-card">
+                        <div class="quote-icon">
+                            <i class="fas fa-quote-right"></i>
+                        </div>
+                        <h3>今日一言</h3>
+                        <div class="quote-marquee">
+                            <p id="random-quote" class="quote-text">正在加载一言...</p>
+                        </div>
+                        <div class="quote-footer">
+                            <span class="quote-tag">随机灵感</span>
+                            <button class="quote-refresh" id="quote-refresh" type="button">
+                                <i class="fas fa-sync-alt"></i>
+                                换一个
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-interests">
+                    <h3>Hobbies</h3>
+                    <div class="interests-grid">
+                        <div class="interest-item">
+                            <i class="fa-solid fa-bed"></i>
+                            <span>Sleep</span>
+                        </div>
+                        <div class="interest-item">
+                            <i class="fas fa-gamepad"></i>
+                            <span>Games</span>
+                        </div>
+                        <div class="interest-item">
+                            <i class="fas fa-guitar"></i>
+                            <span>Composition</span>
+                        </div>
+                        <div class="interest-item">
+                            <i class="fas fa-music"></i>
+                            <span>Vocaloid</span>
+                        </div>
+                        <div class="interest-item">
+                            <i class="fa-solid fa-camera"></i>
+                            <span>Photograph</span>
+                        </div>
+                        <div class="interest-item">
+                            <i class="fas fa-code"></i>
+                            <span>Codeing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系我区域 -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-envelope"></i>
+                    联系我
+                </h2>
+                <p class="section-subtitle">一起聊聊这个世界的美好吧！</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fab fa-qq"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>QQ</h4>
+                            <p>1846612545</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fab fa-github"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>GitHub</h4>
+                            <p>XJMiao233</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p>XJMiao@xjmiao.top</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form class="form">
+                        <div class="form-group">
+                            <input type="text" class="form-input" placeholder="你的名字" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-input" placeholder="邮箱地址" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-input" placeholder="想对我说些什么..." rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            发送消息
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <p>&copy; 2025 XJMiao's Home. Running on <a href="https://pages.github.com/" target="_blank" rel="noopener noreferrer">GitHub Pages</a></p>
+                    <a class="footer-icp" href="https://icp.gov.moe/?keyword=20261312" target="_blank" rel="noopener noreferrer">萌ICP备20261312号</a>
+                </div>
+                <div class="social-links">
+                    <a href="https://space.bilibili.com/569861719?spm_id_from=333.1007.0.0" class="social-link" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-bilibili"></i>
+                    </a>
+                    <a href="https://github.com/XJMiao233" class="social-link" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="js/main.js"></script>
+</body>
+</html>
