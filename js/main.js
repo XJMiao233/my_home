@@ -8,6 +8,7 @@ const themeToggleText = document.querySelector('.theme-toggle-text');
 const quoteElement = document.getElementById('random-quote');
 const quoteRefreshButton = document.getElementById('quote-refresh');
 const themeModeStorageKey = 'theme-mode';
+const defaultPageTitle = '✨ XJMiao\'s Home ✨';
 let themeMode = 'auto';
 
 // ===== 页面加载完成后执行 =====
@@ -419,11 +420,7 @@ document.head.appendChild(style);
 
 // ===== 页面可见性 API =====
 document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-        document.title = '(╥﹏╥) 我走了...';
-    } else {
-        document.title = '✨ XJMiao's Home  ✨';
-    }
+    document.title = defaultPageTitle;
 });
 
 // ===== Easter Egg - konami code =====
