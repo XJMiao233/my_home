@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 初始化所有功能
     initNavigation();
     initThemeToggle();
+    initHeroButtons();
     initRandomQuote();
     initScrollAnimations();
     initFormHandler();
@@ -220,15 +221,30 @@ function initRandomQuote() {
         });
 }
 
+function initHeroButtons() {
+    document.querySelectorAll('[data-target]').forEach(button => {
+        button.addEventListener('click', () => {
+            const targetId = button.getAttribute('data-target');
+            if (targetId) {
+                scrollToSection(targetId);
+            }
+        });
+    });
+}
+
 // ===== 平滑滚动功能 =====
 function scrollToSection(sectionId) {
     const section = document.getElementById(sectionId);
     if (section) {
-        const offsetTop = section.offsetTop - 80; // 考虑导航栏高度
-        window.scrollTo({
-            top: offsetTop,
-            behavior: 'smooth'
-        });
+        const offsetTop = section.getBoundingClientRect().top + window.pageYOffset - 80;
+        if (typeof window.scrollTo === 'function') {
+            window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
+            });
+        } else {
+            window.scrollTo(0, offsetTop);
+        }
     }
 }
 
