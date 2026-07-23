@@ -102,23 +102,25 @@ function initThemeToggle() {
 }
 
 function initRandomQuote() {
-    const quotes = [
-        '每一次尝试，都是在向更好的自己靠近。',
-        '愿你有光，愿你有梦，也愿你能成为自己喜欢的人。',
-        '真正的成长，往往始于愿意慢下来思考。',
-        '星光不问赶路人，时光也不会辜负努力的人。',
-        '把喜欢的事情坚持下去，终会发光。',
-        '在热闹中保持清醒，在安静时拥有热情。'
+    if (!quoteElement) return;
+
+    const fallbackQuotes = [
+        '愿你像星星一样发光，也像风一样自由。',
+        '即使世界很吵，也要记得自己心里的那点光。',
+        '有些梦不会立刻实现，但它们会陪你走很远。',
+        '真正的勇气，往往藏在不肯放弃的心里。',
+        '把喜欢的事留在心里，迟早会化作勇气。',
+        '在喧闹的世界里，保持一份温柔和执拗。'
     ];
 
+    const quoteTagElement = document.querySelector('.quote-tag');
+    let quotesToShow = [...fallbackQuotes];
     let quoteIndex = 0;
     let charIndex = 0;
     let typingTimer = null;
 
     const typeQuote = () => {
-        if (!quoteElement) return;
-
-        const currentQuote = quotes[quoteIndex];
+        const currentQuote = quotesToShow[quoteIndex];
         quoteElement.textContent = currentQuote.substring(0, charIndex + 1);
         charIndex++;
 
@@ -127,14 +129,76 @@ function initRandomQuote() {
             return;
         }
 
-        typingTimer = setTimeout(typeQuote, 100);
+        typingTimer = setTimeout(typeQuote, 80);
+    };
+
+    const showQuote = (quoteText, sourceText = '二次元语录') => {
+        clearTimeout(typingTimer);
+        charIndex = 0;
+        quoteIndex = 0;
+        quotesToShow = [quoteText, ...fallbackQuotes];
+        typeQuote();
+
+        if (quoteTagElement) {
+            quoteTagElement.textContent = sourceText;
+        }
     };
 
     const showNextQuote = () => {
         clearTimeout(typingTimer);
-        quoteIndex = (quoteIndex + 1) % quotes.length;
+        quoteIndex = (quoteIndex + 1) % quotesToShow.length;
         charIndex = 0;
         typeQuote();
+    };
+
+    const tryApiSources = async () => {
+        const sources = [
+            {
+                url: 'https://v1.hitokoto.cn/?c=a&c=b&c=c&encode=json&max_length=60',
+                parse: (data) => {
+                    if (!data || !data.hitokoto) return null;
+                    return {
+                        text: data.hitokoto,
+                        source: data.from_who || data.from || 'Hitokoto'
+                    };
+                }
+            },
+            {
+                url: 'https://api.ixiaowai.cn/ylapi/index.php?format=json',
+                parse: (data) => {
+                    const text = data?.text || data?.hitokoto || data?.content || data?.quote || data?.data?.text || data?.data?.content;
+                    if (!text) return null;
+                    return {
+                        text,
+                        source: data?.from || data?.source || data?.author || '一言'
+                    };
+                }
+            }
+        ];
+
+        for (const source of sources) {
+            try {
+                const response = await fetch(source.url, {
+                    headers: { 'Accept': 'application/json' },
+                    mode: 'cors'
+                });
+
+                if (!response.ok) {
+                    continue;
+                }
+
+                const payload = await response.json();
+                const parsed = source.parse(payload);
+
+                if (parsed && parsed.text) {
+                    return parsed;
+                }
+            } catch (error) {
+                continue;
+            }
+        }
+
+        return null;
     };
 
     typeQuote();
@@ -142,6 +206,18 @@ function initRandomQuote() {
     if (quoteRefreshButton) {
         quoteRefreshButton.addEventListener('click', showNextQuote);
     }
+
+    tryApiSources()
+        .then((result) => {
+            if (result) {
+                showQuote(result.text, result.source);
+            } else {
+                showQuote(fallbackQuotes[0], '随机灵感');
+            }
+        })
+        .catch(() => {
+            showQuote(fallbackQuotes[0], '随机灵感');
+        });
 }
 
 // ===== 平滑滚动功能 =====
@@ -522,13 +598,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// 应用节流到滚动事件
-window.addEventListener('scroll', throttle(() => {
-    // 滚动相关逻辑已在其他地方处理
-}, 16)); // 约60fps
-
 // ===== 导出函数供全局使用 =====
 window.scrollToSection = scrollToSection;
 window.showNotification = showNotification;
 
-console.log('🌸 二次元世界已加载完成！欢迎来到 XJMiao's Home  ✨');
+console.log("🌸 二次元世界已加载完成！欢迎来到 XJMiao's Home  ✨");
