@@ -35,8 +35,17 @@ function initNavigation() {
     // 移动端菜单切换
     if (hamburger && navMenu) {
         hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
+            const isActive = hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
+            hamburger.setAttribute('aria-expanded', isActive);
+        });
+
+        // 键盘支持
+        hamburger.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                hamburger.click();
+            }
         });
     }
 
@@ -45,14 +54,22 @@ function initNavigation() {
         link.addEventListener('click', () => {
             hamburger?.classList.remove('active');
             navMenu?.classList.remove('active');
+            hamburger?.setAttribute('aria-expanded', 'false');
         });
     });
 
     // 滚动时改变导航栏样式
+    let scrollTicking = false;
     window.addEventListener('scroll', () => {
-        const navbar = document.querySelector('.navbar');
-        if (navbar) {
-            navbar.classList.toggle('scrolled', window.scrollY > 100);
+        if (!scrollTicking) {
+            requestAnimationFrame(() => {
+                const navbar = document.querySelector('.navbar');
+                if (navbar) {
+                    navbar.classList.toggle('scrolled', window.scrollY > 100);
+                }
+                scrollTicking = false;
+            });
+            scrollTicking = true;
         }
     });
 }
@@ -259,7 +276,16 @@ navLinks.forEach(link => {
 
 // ===== 滚动动画 =====
 function initScrollAnimations() {
-    // 创建 Intersection Observer
+    // 减少动画偏好检查
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+        document.querySelectorAll('.about-card, .contact-item, .interest-item, .stat-item').forEach(el => {
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+        });
+        return;
+    }
+
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -273,7 +299,6 @@ function initScrollAnimations() {
         });
     }, observerOptions);
 
-    // 观察所有需要动画的元素
     const animatedElements = document.querySelectorAll(`
         .about-card,
         .contact-item,
@@ -289,43 +314,74 @@ function initScrollAnimations() {
 
 // ===== 表单处理 =====
 function initFormHandler() {
-    if (form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // 获取表单数据
+    if (!form) return;
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        // 获取表单数据
+        const name = form.querySelector('input[type="text"]')?.value || '';
+        const email = form.querySelector('input[type="email"]')?.value || '';
+        const message = form.querySelector('textarea')?.value || '';
+        
+        // 简单验证
+        if (!name.trim() || !email.trim() || !message.trim()) {
+            showNotification('请填写所有必填字段 📝', 'error');
+            return;
+        }
+
+        // 如果配置了 Formspree 等后端，提交数据
+        const actionUrl = form.getAttribute('action');
+        if (actionUrl && !actionUrl.includes('your-form-id')) {
             const formData = new FormData(form);
-            const name = form.querySelector('input[type="text"]').value;
-            const email = form.querySelector('input[type="email"]').value;
-            const message = form.querySelector('textarea').value;
-            
-            // 显示成功消息
-            showNotification('消息发送成功！感谢您的联系 ✨', 'success');
-            
-            // 重置表单
+            fetch(actionUrl, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            })
+            .then(response => {
+                if (response.ok) {
+                    showNotification('消息发送成功！感谢您的联系 ✨', 'success');
+                    form.reset();
+                } else {
+                    showNotification('发送失败，请稍后再试 😥', 'error');
+                }
+            })
+            .catch(() => {
+                showNotification('网络错误，请稍后再试 😥', 'error');
+            });
+        } else {
+            // 无后端：显示提示
+            showNotification('消息已收到！（表单后端待配置）✨', 'success');
             form.reset();
-        });
-    }
+        }
+    });
 }
 
 // ===== 通知系统 =====
 function showNotification(message, type = 'info') {
-    // 创建通知元素
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
+    notification.setAttribute('role', 'alert');
+    notification.setAttribute('aria-live', 'polite');
     notification.innerHTML = `
         <div class="notification-content">
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
             <span>${message}</span>
         </div>
     `;
     
-    // 添加样式
+    const bgMap = {
+        success: 'linear-gradient(135deg, #ff69b4, #8b5cf6)',
+        error: 'linear-gradient(135deg, #ef4444, #f97316)',
+        info: 'linear-gradient(135deg, #3b82f6, #8b5cf6)'
+    };
+
     notification.style.cssText = `
         position: fixed;
         top: 100px;
         right: 20px;
-        background: ${type === 'success' ? 'linear-gradient(135deg, #ff69b4, #8b5cf6)' : 'linear-gradient(135deg, #3b82f6, #8b5cf6)'};
+        background: ${bgMap[type] || bgMap.info};
         color: white;
         padding: 1rem 1.5rem;
         border-radius: 10px;
@@ -334,27 +390,30 @@ function showNotification(message, type = 'info') {
         transform: translateX(400px);
         transition: all 0.3s ease;
         backdrop-filter: blur(20px);
+        max-width: min(360px, calc(100vw - 40px));
     `;
     
-    // 添加到页面
     document.body.appendChild(notification);
     
-    // 显示动画
     setTimeout(() => {
         notification.style.transform = 'translateX(0)';
     }, 100);
     
-    // 自动移除
     setTimeout(() => {
         notification.style.transform = 'translateX(400px)';
         setTimeout(() => {
-            document.body.removeChild(notification);
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
         }, 300);
     }, 3000);
 }
 
 // ===== 浮动元素动画增强 =====
 function initFloatingElements() {
+    // 减少动画偏好检查
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
     const floatingElements = document.querySelectorAll(`
         .floating-heart,
         .floating-star,
@@ -363,7 +422,6 @@ function initFloatingElements() {
     `);
     
     floatingElements.forEach((element, index) => {
-        // 添加鼠标交互
         element.addEventListener('mouseenter', () => {
             element.style.transform = 'scale(1.5) rotate(20deg)';
             element.style.filter = 'drop-shadow(0 0 10px rgba(255, 105, 180, 0.7))';
@@ -374,7 +432,6 @@ function initFloatingElements() {
             element.style.filter = '';
         });
         
-        // 随机动画延迟
         element.style.animationDelay = `${Math.random() * 3}s`;
     });
 }
@@ -383,6 +440,9 @@ function initFloatingElements() {
 function initTypingEffect() {
     const typingElement = document.querySelector('.typing-text');
     if (!typingElement) return;
+    
+    // 减少动画偏好检查
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     
     const texts = [
         '一个音游痴 🎵',
@@ -409,7 +469,7 @@ function initTypingEffect() {
         let speed = isDeleting ? 50 : 100;
         
         if (!isDeleting && charIndex === currentText.length) {
-            speed = 2000; // 暂停时间
+            speed = 2000;
             isDeleting = true;
         } else if (isDeleting && charIndex === 0) {
             isDeleting = false;
@@ -420,7 +480,6 @@ function initTypingEffect() {
         setTimeout(typeWriter, speed);
     }
     
-    // 延迟启动打字机效果
     setTimeout(typeWriter, 2000);
 }
 
@@ -429,11 +488,14 @@ function initParticleSystem() {
     const particleContainer = document.querySelector('.floating-particles');
     if (!particleContainer) return;
     
+    // 移动端或减少动画偏好时跳过
+    if (window.matchMedia('(max-width: 768px)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    
     function createParticle() {
         const particle = document.createElement('div');
         particle.className = 'particle';
         
-        // 随机属性
         const size = Math.random() * 6 + 2;
         const duration = Math.random() * 3 + 2;
         const startX = Math.random() * window.innerWidth;
@@ -450,11 +512,11 @@ function initParticleSystem() {
             opacity: 0.6;
             pointer-events: none;
             animation: floatUp ${duration}s linear forwards;
+            will-change: transform, opacity;
         `;
         
         particleContainer.appendChild(particle);
         
-        // 移除粒子
         setTimeout(() => {
             if (particle.parentNode) {
                 particle.parentNode.removeChild(particle);
@@ -462,7 +524,6 @@ function initParticleSystem() {
         }, duration * 1000);
     }
     
-    // 定期创建粒子
     setInterval(createParticle, 2000);
 }
 
@@ -491,6 +552,7 @@ style.textContent = `
     
     .notification-content i {
         font-size: 1.2rem;
+        flex-shrink: 0;
     }
     
     body.loaded .fade-in {
@@ -532,7 +594,6 @@ document.addEventListener('keydown', (e) => {
 });
 
 function triggerEasterEgg() {
-    // 创建特效
     const colors = ['#ff69b4', '#8b5cf6', '#3b82f6', '#ffc0cb'];
     
     for (let i = 0; i < 50; i++) {
@@ -600,7 +661,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         img.addEventListener('load', showImage);
         
-        // 错误处理
         img.addEventListener('error', () => {
             img.style.opacity = '0.5';
             img.style.visibility = 'visible';
@@ -612,7 +672,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
 
 // ===== 导出函数供全局使用 =====
 window.scrollToSection = scrollToSection;

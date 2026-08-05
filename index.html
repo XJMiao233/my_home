@@ -3,7 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✨ XJMiao's Home  ✨</title>
+
+    <title>✨ XJMiao's Home ✨</title>
+
+    <!-- ===== SEO Meta ===== -->
+    <meta name="description" content="XJMiao 的个人主页 — 音游玩家 / Vocaloid 爱好者 / 二次元世界的小角落">
+    <meta name="keywords" content="XJMiao, 音游, Vocaloid, 初音未来, 二次元, 个人主页">
+    <meta name="author" content="XJMiao">
+    <meta name="theme-color" content="#ff69b4">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="✨ XJMiao's Home ✨">
+    <meta property="og:description" content="一个臭打音游的二次元个人主页">
+    <meta property="og:image" content="https://www.xjmiao.top/images/avatar.jpg">
+    <meta property="og:url" content="https://www.xjmiao.top/">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="zh_CN">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="✨ XJMiao's Home ✨">
+    <meta name="twitter:description" content="一个臭打音游的二次元个人主页">
+    <meta name="twitter:image" content="https://www.xjmiao.top/images/avatar.jpg">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "XJMiao",
+        "url": "https://www.xjmiao.top",
+        "image": "https://www.xjmiao.top/images/avatar.jpg",
+        "description": "音游玩家 / Vocaloid 爱好者",
+        "sameAs": [
+            "https://github.com/XJMiao233",
+            "https://space.bilibili.com/569861719"
+        ]
+    }
+    </script>
+
+    <!-- 主题初始化（防闪烁，必须在 CSS 前） -->
     <script>
         (function() {
             const storageKey = 'theme-mode';
@@ -15,22 +54,80 @@
             document.documentElement.setAttribute('data-theme-mode', mode);
         })();
     </script>
-    <link rel="stylesheet" href="css/style.css">
+
+    <!-- ===== 资源加载优化 ===== -->
+    <!-- 预连接字体服务器 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- 预加载关键资源 -->
+    <link rel="preload" href="css/style.css" as="style">
+    <link rel="preload" href="images/avatar.jpg" as="image">
+    <link rel="preload" href="js/main.js" as="script">
+
+    <!-- Favicon -->
     <link rel="icon" href="images/avatar.jpg" type="image/jpeg">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Google Fonts：异步加载，避免阻塞渲染 -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    </noscript>
+
+    <!-- Font Awesome：异步加载 -->
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    </noscript>
+
+    <!-- 自身样式 -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Loading 骨架样式 -->
+    <style>
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-body);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .page-loader.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(255, 105, 180, 0.2);
+            border-top-color: #ff69b4;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
 </head>
 <body>
+    <!-- 页面加载动画 -->
+    <div class="page-loader" id="page-loader">
+        <div class="loader-spinner"></div>
+    </div>
+
     <!-- 背景粒子动画 -->
     <div class="background-animation">
         <div class="floating-particles"></div>
     </div>
 
     <!-- 导航栏 -->
-    <nav class="navbar">
+    <nav class="navbar" role="navigation" aria-label="主导航">
         <div class="nav-container">
             <div class="nav-logo">
-                <i class="fa-solid fa-house"></i>
+                <i class="fa-solid fa-house" aria-hidden="true"></i>
                 <span class="logo-text">XJMiao's Home</span>
             </div>
             <div class="nav-menu" id="nav-menu">
@@ -40,11 +137,11 @@
             </div>
             <div class="nav-actions">
                 <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换主题">
-                    <i class="fas fa-sun theme-icon-light"></i>
-                    <i class="fas fa-moon theme-icon-dark"></i>
+                    <i class="fas fa-sun theme-icon-light" aria-hidden="true"></i>
+                    <i class="fas fa-moon theme-icon-dark" aria-hidden="true"></i>
                     <span class="theme-toggle-text">自动</span>
                 </button>
-                <div class="hamburger" id="hamburger">
+                <div class="hamburger" id="hamburger" role="button" tabindex="0" aria-label="打开菜单" aria-expanded="false">
                     <span class="bar"></span>
                     <span class="bar"></span>
                     <span class="bar"></span>
@@ -53,188 +150,244 @@
         </div>
     </nav>
 
-    <!-- 主页区域 -->
-    <section id="home" class="hero-section">
-        <div class="hero-container">
-            <div class="hero-content">
-                <div class="avatar-container">
-                    <div class="avatar-frame">
-                        <img src="images/avatar.jpg" alt="Avatar" class="avatar-image">
-                        <div class="avatar-glow"></div>
+    <main>
+        <!-- 主页区域 -->
+        <section id="home" class="hero-section">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <div class="avatar-container">
+                        <div class="avatar-frame">
+                            <picture>
+                                <source srcset="images/avatar.webp" type="image/webp">
+                                <img src="images/avatar.jpg" alt="XJMiao 头像" class="avatar-image" width="320" height="320" fetchpriority="high">
+                            </picture>
+                            <div class="avatar-glow" aria-hidden="true"></div>
+                        </div>
+                    </div>
+                    <div class="hero-text">
+                        <h1 class="hero-title">
+                            <span class="greeting" lang="ja">こんにちは！</span>
+                            <span class="name-text">我是 <span class="highlight-name">XJMiao~</span></span>
+                        </h1>
+                        <p class="hero-subtitle">
+                            <span class="typing-text">一个臭打音游的 ✨</span>
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="#about" class="btn btn-primary">
+                                <i class="fas fa-user" aria-hidden="true"></i>
+                                了解更多
+                            </a>
+                            <a href="#contact" class="btn btn-outline">
+                                <i class="fas fa-envelope" aria-hidden="true"></i>
+                                联系我
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <div class="hero-text">
-                    <h1 class="hero-title">
-                        <span class="greeting">こんにちは！</span>
-                        <span class="name-text">我是 <span class="highlight-name">XJMiao~</span></span>
-                    </h1>
-                    <p class="hero-subtitle">
-                        <span class="typing-text">一个臭打音游的 ✨</span>
-                    </p>
-                    <div class="hero-buttons">
-                        <button class="btn btn-primary" type="button" data-target="about">
-                            <i class="fas fa-user"></i>
-                            了解更多
-                        </button>
-                        <button class="btn btn-outline" type="button" data-target="contact">
-                            <i class="fas fa-envelope"></i>
-                            联系我
-                        </button>
-                    </div>
+                <div class="floating-elements" aria-hidden="true">
+                    <div class="floating-heart">💖</div>
+                    <div class="floating-star">✨</div>
+                    <div class="floating-cloud">☁️</div>
+                    <div class="floating-moon">🌙</div>
                 </div>
             </div>
-            <div class="floating-elements">
-                <div class="floating-heart">💖</div>
-                <div class="floating-star">✨</div>
-                <div class="floating-cloud">☁️</div>
-                <div class="floating-moon">🌙</div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- 关于我区域 -->
-    <section id="about" class="about-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-heart"></i>
-                    关于我
-                </h2>
-                <p class="section-subtitle">了解一下这个小小的二次元世界</p>
+        <!-- 关于我区域 -->
+        <section id="about" class="about-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-heart" aria-hidden="true"></i>
+                        关于我
+                    </h2>
+                    <p class="section-subtitle">了解一下这个小小的二次元世界</p>
+                </div>
+                <div class="about-content">
+                    <div class="about-text">
+                        <div class="about-card quote-card">
+                            <div class="quote-icon" aria-hidden="true">
+                                <i class="fas fa-quote-right"></i>
+                            </div>
+                            <h3>今日一言</h3>
+                            <div class="quote-marquee">
+                                <p id="random-quote" class="quote-text">正在加载一言...</p>
+                            </div>
+                            <div class="quote-footer">
+                                <span class="quote-tag">随机灵感</span>
+                                <button class="quote-refresh" id="quote-refresh" type="button" aria-label="换一条一言">
+                                    <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                                    换一个
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about-interests">
+                        <h3>Hobbies</h3>
+                        <div class="interests-grid">
+                            <div class="interest-item">
+                                <i class="fa-solid fa-bed" aria-hidden="true"></i>
+                                <span>Sleep</span>
+                            </div>
+                            <div class="interest-item">
+                                <i class="fas fa-gamepad" aria-hidden="true"></i>
+                                <span>Games</span>
+                            </div>
+                            <div class="interest-item">
+                                <i class="fas fa-guitar" aria-hidden="true"></i>
+                                <span>Composition</span>
+                            </div>
+                            <div class="interest-item">
+                                <i class="fas fa-music" aria-hidden="true"></i>
+                                <span>Vocaloid</span>
+                            </div>
+                            <div class="interest-item">
+                                <i class="fa-solid fa-camera" aria-hidden="true"></i>
+                                <span>Photograph</span>
+                            </div>
+                            <div class="interest-item">
+                                <i class="fas fa-code" aria-hidden="true"></i>
+                                <span>Coding</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="about-content">
-                <div class="about-text">
-                    <div class="about-card quote-card">
-                        <div class="quote-icon">
-                            <i class="fas fa-quote-right"></i>
+        </section>
+
+        <!-- 联系我区域 -->
+        <section id="contact" class="contact-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                        联系我
+                    </h2>
+                    <p class="section-subtitle">一起聊聊这个世界的美好吧！</p>
+                </div>
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fab fa-qq" aria-hidden="true"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>QQ</h4>
+                                <p>1846612545</p>
+                            </div>
                         </div>
-                        <h3>今日一言</h3>
-                        <div class="quote-marquee">
-                            <p id="random-quote" class="quote-text">正在加载一言...</p>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fab fa-github" aria-hidden="true"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>GitHub</h4>
+                                <p><a href="https://github.com/XJMiao233" target="_blank" rel="noopener noreferrer">XJMiao233</a></p>
+                            </div>
                         </div>
-                        <div class="quote-footer">
-                            <span class="quote-tag">随机灵感</span>
-                            <button class="quote-refresh" id="quote-refresh" type="button">
-                                <i class="fas fa-sync-alt"></i>
-                                换一个
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope" aria-hidden="true"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>Email</h4>
+                                <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b0e8fafdd9d1dff0c8daddd9d1df9ec4dfc0">[email&#160;protected]</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-form">
+                        <form class="form" action="https://formspree.io/f/your-form-id" method="POST">
+                            <div class="form-group">
+                                <label for="contact-name" class="sr-only">你的名字</label>
+                                <input id="contact-name" type="text" name="name" class="form-input" placeholder="你的名字" required autocomplete="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-email" class="sr-only">邮箱地址</label>
+                                <input id="contact-email" type="email" name="email" class="form-input" placeholder="邮箱地址" required autocomplete="email">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-message" class="sr-only">想对我说些什么</label>
+                                <textarea id="contact-message" name="message" class="form-input" placeholder="想对我说些什么..." rows="4" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                                发送消息
                             </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="about-interests">
-                    <h3>Hobbies</h3>
-                    <div class="interests-grid">
-                        <div class="interest-item">
-                            <i class="fa-solid fa-bed"></i>
-                            <span>Sleep</span>
-                        </div>
-                        <div class="interest-item">
-                            <i class="fas fa-gamepad"></i>
-                            <span>Games</span>
-                        </div>
-                        <div class="interest-item">
-                            <i class="fas fa-guitar"></i>
-                            <span>Composition</span>
-                        </div>
-                        <div class="interest-item">
-                            <i class="fas fa-music"></i>
-                            <span>Vocaloid</span>
-                        </div>
-                        <div class="interest-item">
-                            <i class="fa-solid fa-camera"></i>
-                            <span>Photograph</span>
-                        </div>
-                        <div class="interest-item">
-                            <i class="fas fa-code"></i>
-                            <span>Codeing</span>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- 联系我区域 -->
-    <section id="contact" class="contact-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-envelope"></i>
-                    联系我
-                </h2>
-                <p class="section-subtitle">一起聊聊这个世界的美好吧！</p>
-            </div>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fab fa-qq"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h4>QQ</h4>
-                            <p>1846612545</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fab fa-github"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h4>GitHub</h4>
-                            <p>XJMiao233</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h4>Email</h4>
-                            <p>XJMiao@xjmiao.top</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="contact-form">
-                    <form class="form">
-                        <div class="form-group">
-                            <input type="text" class="form-input" placeholder="你的名字" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" class="form-input" placeholder="邮箱地址" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-input" placeholder="想对我说些什么..." rows="4" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-paper-plane"></i>
-                            发送消息
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
     <!-- 页脚 -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-info">
-                    <p>&copy; 2025 XJMiao's Home. Running on <a href="https://pages.github.com/" target="_blank" rel="noopener noreferrer">GitHub Pages</a></p>
-                    <a class="footer-icp" href="https://icp.gov.moe/?keyword=20250898" target="_blank" rel="noopener noreferrer">萌ICP备20250898号</a>
+                    <p>&copy; <span id="current-year">2026</span> XJMiao's Home. Running on <a href="https://pages.github.com/" target="_blank" rel="noopener noreferrer">GitHub Pages</a></p>
+                    <a class="footer-icp" href="https://icp.gov.moe/?keyword=20261312" target="_blank" rel="noopener noreferrer">萌ICP备20261312号</a>
                 </div>
                 <div class="social-links">
-                    <a href="https://space.bilibili.com/569861719?spm_id_from=333.1007.0.0" class="social-link" target="_blank" rel="noopener noreferrer">
-                        <i class="fab fa-bilibili"></i>
+                    <a href="https://space.bilibili.com/569861719?spm_id_from=333.1007.0.0" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Bilibili 主页">
+                        <i class="fab fa-bilibili" aria-hidden="true"></i>
                     </a>
-                    <a href="https://github.com/XJMiao233" class="social-link" target="_blank" rel="noopener noreferrer">
-                        <i class="fab fa-github"></i>
+                    <a href="https://github.com/XJMiao233" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub 主页">
+                        <i class="fab fa-github" aria-hidden="true"></i>
                     </a>
                 </div>
             </div>
         </div>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="js/main.js"></script>
+    <!-- 屏幕阅读器专用样式 -->
+    <style>
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+
+    <!-- 年份动态化 -->
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+
+    <!-- 页面加载器隐藏 -->
+    <script>
+        window.addEventListener('load', function() {
+            var loader = document.getElementById('page-loader');
+            if (loader) {
+                loader.classList.add('hide');
+                setTimeout(function() { loader.remove(); }, 600);
+            }
+        });
+        // 超时兜底：3 秒后强制隐藏
+        setTimeout(function() {
+            var loader = document.getElementById('page-loader');
+            if (loader) { loader.classList.add('hide'); }
+        }, 3000);
+    </script>
+
+    <!-- Cloudflare email protection -->
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+
+    <!-- 主脚本 -->
+    <script src="js/main.js"></script>
+
+    <!-- 粒子系统移动端降级 -->
+    <script>
+        if (window.matchMedia('(max-width: 768px)').matches) {
+            var particles = document.querySelector('.floating-particles');
+            if (particles) particles.style.display = 'none';
+        }
+    </script>
 </body>
 </html>
