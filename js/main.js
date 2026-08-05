@@ -677,4 +677,50 @@ document.addEventListener('DOMContentLoaded', () => {
 window.scrollToSection = scrollToSection;
 window.showNotification = showNotification;
 
-console.log("🌸 二次元世界已加载完成！欢迎来到 XJMiao's Home  ✨");
+// ===== 控制台彩蛋 =====
+(function() {
+    // 主欢迎信息
+    const styles = [
+        'color: #ff69b4',
+        'font-size: 20px',
+        'font-weight: bold',
+        'text-shadow: 0 0 10px rgba(255,105,180,0.5)',
+        'padding: 12px 0'
+    ].join(';');
+
+    const subStyles = [
+        'color: #8b5cf6',
+        'font-size: 13px',
+        'line-height: 1.8',
+        'padding: 4px 0'
+    ].join(';');
+
+    const hintStyles = [
+        'color: #94a3b8',
+        'font-size: 11px',
+        'font-style: italic'
+    ].join(';');
+
+    console.log('%c🌸 二次元世界已加载完成！', styles);
+    console.log('%c欢迎来到 XJMiao\'s Home ✨', subStyles);
+    console.log(
+        '%c\n' +
+        '  　　 ∧＿∧\n' +
+        '  　（｡･ω･｡）＜ 你居然打开了控制台！\n' +
+        '  　 |　　 | \n' +
+        '  　 |　　| \n' +
+        '  　 しーＪ\n',
+        'color: #ff69b4; font-size: 12px; line-height: 1.6'
+    );
+    console.log(
+        '%c✨ 发现彩蛋？那你一定也是个有趣的人 ✨\n' +
+        '🎮 GitHub: XJMiao233\n' +
+        '📺 Bilibili: 569861719\n' +
+        '💤 今天也要好好睡觉哦~',
+        subStyles
+    );
+    console.log(
+        '%c试试 Konami Code 吧 ↑↑↓↓←→←→BA',
+        hintStyles
+    );
+})();
